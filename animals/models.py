@@ -7,7 +7,7 @@ def upload_image_animal(instance, filename):
 class Animals(models.Model):
     id_animal = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     type = models.CharField(max_length = 50)
-    name_animal = models.CharField(max_length=200, blank=True,)
+    name_animal = models.CharField(max_length=200, blank=True,null=True)
     color = models.CharField(max_length = 20)
     breed = models.CharField(max_length = 50)
     birth_date = models.IntegerField()

@@ -1,0 +1,42 @@
+* {
+
+    --verde-musgo:#3e4532;
+    --branco-degrade:#ffffff;
+    --preto-degrade:#000000;
+    --verde-degrade:#d0e6a5;
+    --laranja-degrade:#f89c1b;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    display: flex; /* Use flexbox para alinhar os itens no cabeçalho */
+    justify-content: space-between; /* Distribui os itens ao longo do espaço disponível */
+    align-items: center; /* Alinha os itens verticalmente ao centro */
+}
+
+.logo-container {
+    flex: 1; /* Ocupa o espaço disponível para expandir e preencher */
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+

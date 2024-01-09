@@ -33,7 +33,7 @@ class Animal(models.Model):
     observations = models.CharField(max_length=250, blank=True,null=True)
     image = models.ImageField(upload_to= upload_image_animal, blank=True, null=True)
 
-class UsuarioAdopt(models.Model):
+class UsuarioAdotante(models.Model):
     id_user = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     animal_adotado = models.ForeignKey(Animal, on_delete=models.SET_NULL, null=True, blank=True)

@@ -16,7 +16,7 @@ class ONG(models.Model):
     estado = models.CharField(max_length=100)
 
 
-class Animal(models.Model):
+class Pet(models.Model):
     ong = models.ForeignKey(ONG, on_delete=models.CASCADE)
     id_animal = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     state = models.CharField(max_length=30)
@@ -36,7 +36,7 @@ class Animal(models.Model):
 class UsuarioAdotante(models.Model):
     id_user = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    animal_adotado = models.ForeignKey(Animal, on_delete=models.SET_NULL, null=True, blank=True)
+    animal_adotado = models.ForeignKey(Pet, on_delete=models.SET_NULL, null=True, blank=True)
     document_cpf = models.BigIntegerField (blank=True, null=True)
     birth_date = models.DateField(auto_now_add=False, null=False)
     adress = models.CharField(max_length=50, blank=True,null=True)

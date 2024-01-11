@@ -8,7 +8,6 @@ def upload_image_animal(instance, filename):
 # Create your models here.
 class ONG(models.Model):
     id_ong = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
     responsavel = models.CharField(max_length=100)
     endereco = models.TextField()
@@ -35,7 +34,6 @@ class Pet(models.Model):
 
 class UsuarioAdotante(models.Model):
     id_user = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     animal_adotado = models.ForeignKey(Pet, on_delete=models.SET_NULL, null=True, blank=True)
     document_cpf = models.BigIntegerField (blank=True, null=True)
     birth_date = models.DateField(auto_now_add=False, null=False)

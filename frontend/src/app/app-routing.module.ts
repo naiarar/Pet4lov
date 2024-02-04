@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { UsuarioListComponent } from './usuario-list/usuario-list.component';
+import { UsersComponent } from './users/users.component';
 
 const routes: Routes = [
-  { path: 'usuarios', component: UsuarioListComponent },
+  { path: 'usuarios', component: UsersComponent },
   // Adicione rotas semelhantes para ONGs e Pets
   { path: '', redirectTo: '/usuarios', pathMatch: 'full' }
 ];

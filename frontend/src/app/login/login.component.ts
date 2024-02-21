@@ -7,22 +7,22 @@ import { AuthService } from '../auth/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent  implements OnInit {
-  public loginForm!: FormGroup;
+export class LoginComponent{}
+//  implements OnInit {
+//   public loginForm!: FormGroup;
 
-  constructor(private authService: AuthService) {}
+//   constructor(private authService: AuthService) {}
 
-  ngOnInit() {
-    this.loginForm = new FormGroup({
-      username: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required),
-    });
-  }
+//   ngOnInit() {
+//     this.loginForm = new FormGroup({
+//       username: new FormControl('', Validators.required),
+//       password: new FormControl('', Validators.required),
+//     });
+//   }
 
-  public onSubmit() {
-    this.authService.login(
-      this.loginForm.get('username')!.value,
-      this.loginForm!.get('password')!.value
-    );
-  }
-}
+//   public onSubmit() {
+//     this.authService.login(
+//       this.loginForm.get('username')!.value,
+//       this.loginForm!.get('password')!.value
+//     );
+//   }

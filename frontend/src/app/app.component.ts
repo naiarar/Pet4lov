@@ -1,26 +1,13 @@
 import { Component } from '@angular/core';
-import { AuthService } from './auth/auth.service';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  host: { 'class': 'page' }
+  styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'frontend';
-  isLogged: boolean;
-  private _isLoggedSubscription: any;
-
-  constructor(private authService: AuthService) {
-    this.isLogged = authService.isLoggedIn;
-    this._isLoggedSubscription = authService.isLoggedInChange
-      .subscribe((value) => {
-        this.isLogged = value;
-      });
-  }
-
-  logout() {
-    this.authService.logout();
-  }
+  title = 'pet4lov';
 }

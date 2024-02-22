@@ -1,52 +1,36 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http'; // Importe o HttpClient
-import { Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
-  private tokenKey = 'token';
-  public isLoggedIn: boolean;
-  isLoggedInChange: Subject<boolean> = new Subject<boolean>();
 
-  constructor(
-    private http: HttpClient, // Injete o HttpClient
-    private router: Router
-  ) {
-    let token = localStorage.getItem(this.tokenKey);
-    this.isLoggedIn = token != null && token.length > 0;
+  constructor(private http: HttpClient, private cookieService: CookieService) { }
+  canActivate(): boolean {
+    return this.cookieService.check('token');
   }
 
-  public login(username: string, password: string): void {
-    this.http.post<any>('/api/login', { username, password }).subscribe((response) => {
-      const token = response.token; // Supondo que o token seja retornado pela API
-      localStorage.setItem(this.tokenKey, token);
-      this.toggleIsLoggedIn();
-      this.router.navigate(['/']);
+  login(username: string, password: string) {
+    this.http.post<any>('/login', { username, password }).subscribe(response => {
+      // Salvar o token em um cookie
+      this.cookieService.set('token', response.token);
     });
   }
 
-  toggleIsLoggedIn() {
-    this.isLoggedIn = !this.isLoggedIn;
-    this.isLoggedInChange.next(this.isLoggedIn);
+  logout() {
+    // Limpar o cookie quando o usuário fizer logout
+    this.cookieService.delete('token');
   }
 
-  public logout() {
-    localStorage.removeItem(this.tokenKey);
-    this.toggleIsLoggedIn();
-    this.router.navigate(['/login']);
+  getToken() {
+    // Obter o token do cookie
+    return this.cookieService.get('token');
   }
 
-  public getToken(): string | null {
-    if (this.isLoggedIn) {
-      const tokenString = localStorage.getItem(this.tokenKey);
-      if (tokenString) {
-        const tokenParsed = JSON.parse(tokenString);
-        return tokenParsed.access;
-      }
-    }
-    return null;
+  isLoggedIn() {
+    // Verificar se o token está presente
+    return this.cookieService.check('token');
   }
 }

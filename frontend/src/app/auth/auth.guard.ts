@@ -4,6 +4,9 @@ import { inject } from "@angular/core";
 
 export const AuthGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot) => {
-    return inject(AuthService).canActivate();
-  }
+  state: RouterStateSnapshot) => {
+    const canAcess = inject(AuthService).canActivate()
+    const router: Router = inject(Router);
+      return (!canAcess)?router.createUrlTree(['/login']):canAcess
+
+}

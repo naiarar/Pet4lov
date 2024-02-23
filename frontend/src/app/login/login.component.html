@@ -1,17 +1,13 @@
-login<!-- <div class="d-flex justify-content-center">
-  <form [formGroup]="loginForm">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="email">email:</label>
+    <input type="text" id="email" name="email" formControlName="email">
+  </div>
+  <div>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" formControlName="password">
+  </div>
+  <p>Value:</p>
 
-    <h3>Login</h3>
-    <div>
-        <label class="form-label">Usuário</label>
-        <input class="form-control" name="username" formControlName="username">
-    </div>
-    <div>
-        <label class="form-label">Senha</label>
-        <input class="form-control" name="password" formControlName="password"
-                type="password">
-    </div>
-
-    <button (click)="onSubmit()">Login</button>
-  </form>
-</div> -->
+  <button type="submit" (click)="onSubmit()">Login</button>
+</form>

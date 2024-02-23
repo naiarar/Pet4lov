@@ -1,28 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
-
+import { Login } from './login';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-login',
+  standalone: true,
+  imports: [ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrl: './login.component.scss'
 })
-export class LoginComponent{}
-//  implements OnInit {
-//   public loginForm!: FormGroup;
+export class LoginComponent {
+  loginForm = new FormGroup({
+    email:  new FormControl(''),
+    password :  new FormControl(''),
+  });
+  onSubmit() {
+    // TODO: Use EventEmitter with form value
+    console.warn(this.loginForm.value);
+  }
 
-//   constructor(private authService: AuthService) {}
-
-//   ngOnInit() {
-//     this.loginForm = new FormGroup({
-//       username: new FormControl('', Validators.required),
-//       password: new FormControl('', Validators.required),
-//     });
-//   }
-
-//   public onSubmit() {
-//     this.authService.login(
-//       this.loginForm.get('username')!.value,
-//       this.loginForm!.get('password')!.value
-//     );
-//   }
+}

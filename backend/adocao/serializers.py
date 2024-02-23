@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import ONG, Pet, UsuarioAdotante
+from .models import UsuarioAdmin,ONG, Pet, UsuarioAdotante
+
+class UsuarioAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsuarioAdmin
+        fields = '__all__'
 
 class ONGSerializer(serializers.ModelSerializer):
     class Meta:

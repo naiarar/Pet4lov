@@ -6,19 +6,11 @@ def upload_image_animal(instance, filename):
     return f"{instance.id_animal}-{filename}"
 
 # Create your models here.
-class UsuarioAdmin(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    name = models.CharField(max_length=100)
-    document_cpf = models.BigIntegerField (blank=True, null=True)
-    birth_date = models.DateField(auto_now_add=False, null=False)
-    adress = models.CharField(max_length=50, blank=True,null=True)
-    email = models.CharField(max_length=50, blank=True,null=True)
-    contact = models.CharField(max_length=50, blank=True,null=True)
-
 class ONG(models.Model):
     id_ong = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=100)
-    resposable = models.ForeignKey(UsuarioAdmin, on_delete=models.CASCADE)
+    resposable = models.CharField(max_length=100)
+    document = models.CharField(max_length=100)
     adress = models.TextField()
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)

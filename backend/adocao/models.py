@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
 from uuid import uuid4
 
@@ -6,14 +7,29 @@ def upload_image_animal(instance, filename):
     return f"{instance.id_animal}-{filename}"
 
 # Create your models here.
+
+
+class Usuario(AbstractUser):
+    id_user = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    document_cpf = models.BigIntegerField (blank=True, null=True)
+    birth_date = models.DateField(auto_now_add=False, null=False)
+    adress = models.CharField(max_length=50, blank=True,null=True)
+    email = models.CharField(max_length=100, unique=True)
+    contact = models.CharField(max_length=50, blank=True,null=True)
+    password = models.CharField(max_length=100)
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ['USERNAME_FIELD']
+
 class ONG(models.Model):
     id_ong = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=100)
-    resposable = models.CharField(max_length=100)
+    resposable = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     document = models.CharField(max_length=100)
     adress = models.TextField()
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100, unique=True)
 
 
 class Pet(models.Model):
@@ -33,12 +49,15 @@ class Pet(models.Model):
     observations = models.CharField(max_length=250, blank=True,null=True)
     image = models.ImageField(upload_to= upload_image_animal, blank=True, null=True)
 
+
 class UsuarioAdotante(models.Model):
     id_user = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    name = models.CharField(max_length=100)
     animal_adotado = models.ForeignKey(Pet, on_delete=models.SET_NULL, null=True, blank=True)
     document_cpf = models.BigIntegerField (blank=True, null=True)
     birth_date = models.DateField(auto_now_add=False, null=False)
     adress = models.CharField(max_length=50, blank=True,null=True)
-    email = models.CharField(max_length=50, blank=True,null=True)
+    email = models.CharField(max_length=100, unique=True)
     contact = models.CharField(max_length=50, blank=True,null=True)
+    password = models.CharField(max_length=100)
 

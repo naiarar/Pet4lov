@@ -12,8 +12,8 @@ export class AuthService {
     return this.cookieService.check('token');
   }
 
-  login(username: string, password: string) {
-    this.http.post<any>('/login', { username, password }).subscribe(response => {
+  login(email: string, password: string) {
+    this.http.post<any>('/login', { email, password }).subscribe(response => {
       // Salvar o token em um cookie
       this.cookieService.set('token', response.token);
     });

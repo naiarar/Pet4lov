@@ -1,11 +1,11 @@
 from rest_framework import viewsets
-from .models import UsuarioAdotante, ONG, Pet
-from .serializers import UsuarioAdotanteSerializer, ONGSerializer, PetSerializer
+from .models import Usuario, ONG, Pet
+from .serializers import UsuarioSerializer, ONGSerializer, PetSerializer
 
 
-class UsuarioAdotanteViewSet(viewsets.ModelViewSet):
-    queryset = UsuarioAdotante.objects.all()
-    serializer_class = UsuarioAdotanteSerializer
+class UsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
 
 class ONGViewSet(viewsets.ModelViewSet):
     queryset = ONG.objects.all()

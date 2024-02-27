@@ -1,6 +1,6 @@
+import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
-import { Login } from './login';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-login',
@@ -14,9 +14,14 @@ export class LoginComponent {
     email:  new FormControl(''),
     password :  new FormControl(''),
   });
+  constructor(private route : Router,private service:AuthService) {}
   onSubmit() {
-    // TODO: Use EventEmitter with form value
-    console.warn(this.loginForm.value);
+    if (!this.loginForm.value.email|| !this.loginForm.value.password) return
+
+    this.service.login(this.loginForm.value.email,this.loginForm.value.password)
+      .add(() => {
+        this.route.navigate([`/users/${this.service.user?.id_user}`]);
+      })
   }
 
 }

@@ -4,11 +4,13 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from adocao.views import UsuarioListCreate
 
 urlpatterns = [
     path('api/auth/obtain/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),
+    path('api/register/', UsuarioListCreate.as_view(), name="Criar-Usuario"),
     path('api/', include('adocao.urls')),
 ]
 

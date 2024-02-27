@@ -18,6 +18,11 @@ class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = '__all__'
+
+class UsuarioResSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = [ "email", "id_user" , "name"]    
 class ONGSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -27,11 +32,16 @@ class ONGSerializer(serializers.ModelSerializer):
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     username_field= 'email'
     
-    def validate(self, attrs):
+    def validate(self, attrs) :
         data = super().validate(attrs)
         refresh = self.get_token(self.user)
-        data['lifetime'] = int(refresh.access_token.lifetime.total_seconds())
-        return attrs
+        user = UsuarioResSerializer(self.user)
+        # user.Meta.fields  = [ "email", "id_user" ]
+        data["user"] = user.data
+        data["refresh"] = str(refresh)
+        data["access"] = str(refresh.access_token)
+
+        return data
     
 class PetSerializer(serializers.ModelSerializer):
     class Meta:

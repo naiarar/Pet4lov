@@ -1,0 +1,83 @@
+<form
+  [formGroup]="newUserForm"
+  (ngSubmit)="onSubmit()"
+  enctype="multipart/form-data"
+>
+  <div class="mb-3">
+    <label class="form-label" for="nome">Nome completo:</label>
+    <input type="text" formControlName="name" class="form-control" />
+  </div>
+  <div>
+    <label class="form-label" for="username">Nome de usuário:</label>
+    <input
+      class="form-control"
+      type="text"
+      id="username"
+      name="username"
+      formControlName="username"
+    />
+  </div>
+  <div>
+    <label class="form-label" for="email">Email:</label>
+    <input
+      class="form-control"
+      type="text"
+      id="email"
+      name="email"
+      formControlName="email"
+    />
+  </div>
+  <div>
+    <label class="form-label" for="document_cpf">CPF:</label>
+    <input
+      class="form-control"
+      type="text"
+      id="document_cpf"
+      name="document_cpf"
+      formControlName="document_cpf"
+    />
+  </div>
+  <div>
+    <label class="form-label" for="birth_date">Data Nascimento:</label>
+    <input
+      class="form-control"
+      type="text"
+      id="birth_date"
+      name="birth_date"
+      formControlName="birth_date"
+    />
+  </div>
+  <div>
+    <label class="form-label" for="adress">Endereço:</label>
+    <input
+      class="form-control"
+      type="text"
+      id="adress"
+      name="adress"
+      formControlName="adress"
+    />
+  </div>
+
+  <div>
+    <label class="form-label" for="contact">Contato:</label>
+    <input
+      class="form-control"
+      type="text"
+      id="contact"
+      name="contact"
+      formControlName="contact"
+    />
+  </div>
+  <div>
+    <label class="form-label" for="password">Senha:</label>
+    <input
+      class="form-control"
+      type="text"
+      id="password"
+      name="password"
+      formControlName="password"
+    />
+  </div>
+
+  <button type="submit" (click)="onSubmit()">Criar</button>
+</form>

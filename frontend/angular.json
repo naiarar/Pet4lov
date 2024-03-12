@@ -29,9 +29,6 @@
               "src/favicon.ico",
               "src/assets"
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
             "scripts": [],
             "server": "src/main.server.ts",
             "prerender": true,
@@ -93,9 +90,6 @@
             "assets": [
               "src/favicon.ico",
               "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
             ],
             "scripts": []
           }

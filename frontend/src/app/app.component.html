@@ -1,9 +1,68 @@
-<ul>
-  <li><a routerLink="pets" href="pets">Pets</a></li>
-  <li><a href="ongs">Ongs</a></li>
-  <li><a href="login">Login</a></li>
-  <li><a href="register">Novo Usuario</a></li>
-  <li><a></a></li>
-</ul>
+<header role="banner">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">Pet4Lov</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarsExample05"
+        aria-controls="navbarsExample05"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
+      <div class="collapse navbar-collapse" id="navbarsExample05">
+        <ul class="navbar-nav ml-auto pl-lg-5 pl-0">
+          <li class="nav-item">
+            <a class="nav-link active" routerLink="pets" href="pets">Pets</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ongs">Ongs</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="dropdown04"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              >A Pet4lov</a
+            >
+            <div class="dropdown-menu" aria-labelledby="dropdown04">
+              <a class="dropdown-item" href="#">Missão</a>
+              <a class="dropdown-item" href="#">Visão</a>
+              <a class="dropdown-item" href="#">Valores</a>
+            </div>
+          </li>
+          @if (isLogged) {
+          <li class="nav-item">
+            <a class="nav-link" href="#" (click)="logout()">Logout</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="users/:id">Minha Conta</a>
+          </li>
+          } @else {
+          <li class="nav-item">
+            <a class="nav-link" href="register">Cadastre-se</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="login">Login</a>
+          </li>
+          }
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item cta-btn">
+            <a class="nav-link" href="#">Contato</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
 <router-outlet></router-outlet>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
+import { Subject } from 'rxjs';
 
 interface IUser{
 
@@ -14,8 +15,11 @@ interface IUser{
 })
 export class AuthService {
   user?: IUser
-  constructor(private http: HttpClient, private cookieService: CookieService) { }
-
+  isLoggedIn: boolean = false;
+  isLoggedInChange: Subject<boolean> = new Subject<boolean>();
+  constructor(private http: HttpClient, private cookieService: CookieService) {
+    this.isLoggedIn = this.canActivate()
+   }
   canActivate(): boolean {
     return this.cookieService.check('access');
   }
@@ -25,6 +29,8 @@ export class AuthService {
       this.user = response.user
       this.cookieService.set('id_user', response.user.id_user);
       this.cookieService.set('access', response.access);
+      this.isLoggedIn = true
+      this.isLoggedInChange.next(this.isLoggedIn);
     });
   }
 
@@ -32,6 +38,8 @@ export class AuthService {
     // Limpar o cookie quando o usuário fizer logout
     this.cookieService.delete('access');
     this.cookieService.delete('id_user');
+    this.isLoggedIn = false
+    this.isLoggedInChange.next(this.isLoggedIn);
   }
 
   getToken() {
@@ -46,7 +54,10 @@ export class AuthService {
 
   getMe() {
     if (!this.getUserId())return
-    return this.user
+
+    return this.http.get<any>('http://localhost:8000/api/usuarios/'+this.getUserId()).subscribe(response => {
+      this.user = response
+    });
   }
 
 }

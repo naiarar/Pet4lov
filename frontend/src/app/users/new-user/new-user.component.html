@@ -1,7 +1,8 @@
 <div class="container">
   <form [formGroup]="newUserForm" (ngSubmit)="onSubmit()" class="row">
-    <div class="col-md-4">
-      <div class="form-floating mb-3">
+    <div class="mb-2">
+      <label for="name">Nome</label>
+      <div class="form-label">
         <input
           type="text"
           class="form-control"
@@ -9,11 +10,11 @@
           formControlName="name"
           placeholder="Nome"
         />
-        <label for="name">Nome</label>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="form-floating mb-3">
+    <div class="mb-2">
+      <label for="username">Username</label>
+      <div class="form-label">
         <input
           type="text"
           class="form-control"
@@ -21,12 +22,12 @@
           formControlName="username"
           placeholder="Username"
         />
-        <label for="username">Username</label>
       </div>
     </div>
 
-    <div class="col-md-4">
-      <div class="form-floating mb-3">
+    <div class="mb-2">
+      <label for="email">Email</label>
+      <div class="form-label">
         <input
           type="email"
           class="form-control"
@@ -34,11 +35,11 @@
           formControlName="email"
           placeholder="Email"
         />
-        <label for="email">Email</label>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="form-floating mb-3">
+    <div class="mb-2">
+      <label for="document_cpf">CPF</label>
+      <div class="form-label">
         <input
           type="number"
           class="form-control"
@@ -46,11 +47,11 @@
           formControlName="document_cpf"
           placeholder="document_cpf"
         />
-        <label for="document_cpf">CPF</label>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="form-floating mb-3">
+    <div class="mb-2">
+      <label for="adress ">Endereço</label>
+      <div class="form-label">
         <input
           type="text"
           class="form-control"
@@ -58,11 +59,11 @@
           formControlName="adress"
           placeholder="Endereço"
         />
-        <label for="adress ">Endereço</label>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="form-floating mb-3">
+    <div class="mb-2">
+      <label for="birth_date ">Data de Nascimento</label>
+      <div class="form-label">
         <input
           type="number"
           class="form-control"
@@ -70,11 +71,11 @@
           formControlName="birth_date"
           placeholder="Data Nascimento"
         />
-        <label for="birth_date ">Data de Nascimento</label>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="form-floating mb-3">
+    <div class="mb-2">
+      <label for="contact ">Contato</label>
+      <div class="form-label">
         <input
           type="text"
           class="form-control"
@@ -82,11 +83,11 @@
           formControlName="contact"
           placeholder="Contato"
         />
-        <label for="contact ">Contato</label>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="form-floating mb-3">
+    <div class="mb-2">
+      <label for="password " class="form-label">Senha</label>
+      <div class="form-label">
         <input
           type="password"
           class="form-control"
@@ -94,7 +95,6 @@
           formControlName="password"
           placeholder="Senha"
         />
-        <label for="password " class="form-label">Senha</label>
       </div>
     </div>
     <div class="col-12">
@@ -103,10 +103,10 @@
           class="form-check-input is-valid"
           type="checkbox"
           value=""
-          id="validCheck3"
+          id="validCheck2"
           required
         />
-        <label class="form-check-label" for="validCheck3">
+        <label class="form-check-label" for="validCheck2">
           Aceito os Termos de Usuario
         </label>
       </div>

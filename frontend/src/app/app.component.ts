@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 
 @Component({
@@ -12,4 +12,16 @@ import { AuthService } from './auth/auth.service';
 })
 export class AppComponent {
   title = 'pet4lov';
+  isLogged = false
+  constructor(private route : Router,private service:AuthService) {
+    this.isLogged = service.canActivate()
+    service.isLoggedInChange
+      .subscribe((value) => {
+        this.isLogged = value
+      })
+  }
+  logout() {
+    this.service.logout()
+    this.route.navigate([`/pets`]);
+  }
 }

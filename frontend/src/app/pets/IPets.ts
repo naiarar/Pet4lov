@@ -1,8 +1,8 @@
 import { IOngs } from "../ongs/IOngs";
 
 export interface IPets {
-    ong : string,
-    id_animal : number,
+    ong : IOngs,
+    id_animal : string,
     state : string,
     city : string,
     type : string,

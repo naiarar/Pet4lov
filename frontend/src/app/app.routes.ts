@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth/auth.guard';
 import { UsersComponent } from './users/users.component';
 import { NewUserComponent } from './users/new-user/new-user.component';
+import { NewOngsComponent } from './ongs/new-ong/new-ong.component';
 
 
 export const routes: Routes = [
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'ongs', component: OngsComponent},
   { path: 'users/:id', component: UsersComponent, canActivate: [AuthGuard]},
   { path: 'register', component: NewUserComponent},
+  { path: 'register-new-ong', component: NewOngsComponent},
   { path: 'login', component: LoginComponent},
   { path: '', component: PetsComponent},
 ];

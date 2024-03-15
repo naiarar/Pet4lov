@@ -34,6 +34,7 @@ class ONG(models.Model):
 
 
 class Pet(models.Model):
+    responsable_pet = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     ong = models.ForeignKey(ONG, on_delete=models.CASCADE)
     id_animal = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     state = models.CharField(max_length=30)
@@ -43,7 +44,7 @@ class Pet(models.Model):
     color = models.CharField(max_length = 20)
     breed = models.CharField(max_length = 50) #raça
     birth_date = models.DateField(auto_now_add=False, null=False)
-    adoption_date = models.DateTimeField(auto_now_add=True, null=True)
+    adoption_date = models.CharField(null=True)
     health_condition = models.CharField(max_length = 200)
     vacine_status = models.CharField(max_length=50, blank=True,null=True)
     vermifugue_status = models.CharField(max_length=50, blank=True,null=True)

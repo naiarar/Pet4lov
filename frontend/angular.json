@@ -30,10 +30,13 @@
               "src/assets"
             ],
             "scripts": [],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
+            "styles": [
+              "src/styles.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules"
+              ]
             }
           },
           "configurations": {
@@ -91,7 +94,8 @@
               "src/favicon.ico",
               "src/assets"
             ],
-            "scripts": []
+            "scripts": [],
+            "styles": []
           }
         }
       }

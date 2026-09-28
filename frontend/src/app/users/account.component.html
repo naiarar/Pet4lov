@@ -1,0 +1,92 @@
+<div class="container">
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>
+    </div>
+  } @else if (!user) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+  } @else {
+    <h1 class="h3 mb-4">Olá, {{ user.name }}!</h1>
+
+    @if (errorMessage) {
+      <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+    }
+
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h2 class="h5">Meus dados</h2>
+            <dl class="mb-0 small">
+              <dt>E-mail</dt>
+              <dd>{{ user.email }}</dd>
+              <dt>Telefone</dt>
+              <dd>{{ user.contact || '—' }}</dd>
+              <dt>Nascimento</dt>
+              <dd>{{ user.birth_date ? (user.birth_date | date: 'dd/MM/yyyy') : '—' }}</dd>
+              <dt>Endereço</dt>
+              <dd class="mb-0">{{ user.address || '—' }}</dd>
+            </dl>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h2 class="h5">Minha ONG</h2>
+            @if (ong) {
+              <p class="mb-1 fw-semibold">{{ ong.name }}</p>
+              <p class="small text-body-secondary">{{ ong.city }}/{{ ong.state }} · {{ ong.email }}</p>
+              <a [routerLink]="['/ongs', ong.id_ong, 'editar']" class="btn btn-outline-primary btn-sm">Editar ONG</a>
+            } @else {
+              <p class="small text-body-secondary">Você ainda não cadastrou uma ONG. Com ela você pode divulgar pets para adoção.</p>
+              <a routerLink="/ongs/nova" class="btn btn-primary btn-sm">Cadastrar ONG</a>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2 class="h5 mb-0">Meus pets</h2>
+              @if (ong) {
+                <a routerLink="/pets/novo" class="btn btn-primary btn-sm">Cadastrar pet</a>
+              }
+            </div>
+
+            @if (pets.length) {
+              <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th scope="col">Nome</th>
+                      <th scope="col">Espécie</th>
+                      <th scope="col">Cidade</th>
+                      <th scope="col" class="text-end">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (pet of pets; track pet.id_animal) {
+                      <tr>
+                        <td><a [routerLink]="['/pets', pet.id_animal]">{{ pet.name_animal || 'Sem nome' }}</a></td>
+                        <td>{{ pet.type }}</td>
+                        <td>{{ pet.city }}/{{ pet.state }}</td>
+                        <td class="text-end text-nowrap">
+                          <a [routerLink]="['/pets', pet.id_animal, 'editar']" class="btn btn-outline-secondary btn-sm">Editar</a>
+                          <button type="button" class="btn btn-outline-danger btn-sm ms-1" (click)="deletePet(pet)">Remover</button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else {
+              <p class="text-body-secondary mb-0">Nenhum pet cadastrado ainda.</p>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

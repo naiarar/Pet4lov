@@ -1,0 +1,57 @@
+<div class="container">
+  <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div>
+      <h1 class="h3 mb-1">Pets para adoção</h1>
+      <p class="text-body-secondary mb-0">Encontre um novo melhor amigo cadastrado por ONGs parceiras.</p>
+    </div>
+    <a routerLink="/pets/novo" class="btn btn-primary">Cadastrar pet</a>
+  </div>
+
+  <form [formGroup]="filters" (ngSubmit)="applyFilters()" class="row g-2 mb-3" role="search">
+    <div class="col-md-6">
+      <label for="search" class="visually-hidden">Buscar</label>
+      <input id="search" type="search" class="form-control" formControlName="search" placeholder="Buscar por nome, raça ou cidade" />
+    </div>
+    <div class="col-md-4">
+      <label for="type" class="visually-hidden">Espécie</label>
+      <select id="type" class="form-select" formControlName="type" (change)="applyFilters()">
+        <option value="">Todas as espécies</option>
+        @for (type of types; track type) {
+          <option [value]="type">{{ type }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-md-2 d-grid">
+      <button type="submit" class="btn btn-outline-primary">Buscar</button>
+    </div>
+  </form>
+
+  @if (ong) {
+    <p>
+      <span class="badge text-bg-light border fs-6 fw-normal">
+        ONG: {{ ongName || '...' }}
+        <button type="button" class="btn-close btn-close-sm ms-1 align-middle" aria-label="Remover filtro de ONG" (click)="clearOng()"></button>
+      </span>
+    </p>
+  }
+
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>
+    </div>
+  } @else if (errorMessage) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+  } @else {
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+      @for (pet of pets; track pet.id_animal; let i = $index) {
+        <div class="col">
+          <app-pet-card [pet]="pet" [eager]="i < 4" />
+        </div>
+      } @empty {
+        <div class="col-12">
+          <div class="alert alert-light border text-center">Nenhum pet encontrado com esses filtros.</div>
+        </div>
+      }
+    </div>
+  }
+</div>

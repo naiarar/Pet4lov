@@ -1,0 +1,46 @@
+<div class="container">
+  <a routerLink="/pets" class="d-inline-block mb-3">← Voltar para a lista</a>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+  } @else if (!pet) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>
+    </div>
+  } @else {
+    <div class="row g-4">
+      <div class="col-md-6">
+        <img [src]="pet.image || 'assets/pet-placeholder.png'" class="img-fluid rounded shadow-sm w-100 card-img-pet" [class.is-placeholder]="!pet.image" [alt]="'Foto de ' + (pet.name_animal || pet.type)" />
+      </div>
+      <div class="col-md-6">
+        <h1 class="h2">{{ pet.name_animal || 'Sem nome' }}</h1>
+        <p class="text-body-secondary">{{ pet.type }} · {{ pet.breed }} · {{ pet.color }}</p>
+
+        <dl class="row">
+          <dt class="col-sm-5">Nascimento</dt>
+          <dd class="col-sm-7">{{ pet.birth_date | date: 'dd/MM/yyyy' }}</dd>
+          <dt class="col-sm-5">Localização</dt>
+          <dd class="col-sm-7">{{ pet.city }}/{{ pet.state }}</dd>
+          <dt class="col-sm-5">Saúde</dt>
+          <dd class="col-sm-7">{{ pet.health_condition }}</dd>
+          <dt class="col-sm-5">Vacinação</dt>
+          <dd class="col-sm-7">{{ pet.vaccination_status || 'Não informado' }}</dd>
+          <dt class="col-sm-5">Vermifugação</dt>
+          <dd class="col-sm-7">{{ pet.deworming_status || 'Não informado' }}</dd>
+          @if (pet.observations) {
+            <dt class="col-sm-5">Observações</dt>
+            <dd class="col-sm-7">{{ pet.observations }}</dd>
+          }
+        </dl>
+
+        <div class="card card-body bg-light border-0">
+          <p class="mb-2">Quer adotar? Fale com a <strong>{{ pet.ong_name }}</strong>.</p>
+          <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-primary" [href]="'mailto:' + pet.ong_email + '?subject=Quero adotar ' + (pet.name_animal || 'um pet')">Entrar em contato</a>
+            <a class="btn btn-outline-primary" routerLink="/pets" [queryParams]="{ ong: pet.ong }">Outros pets da ONG</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

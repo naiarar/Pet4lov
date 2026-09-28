@@ -1,0 +1,85 @@
+<div class="container form-page">
+  <h1 class="h3 mb-4">Criar conta</h1>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="card card-body shadow-sm" novalidate>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="name" class="form-label">Nome completo</label>
+        <input id="name" type="text" class="form-control" formControlName="name" autocomplete="name" [class.is-invalid]="isInvalid('name')" />
+        <div class="invalid-feedback">Informe seu nome.</div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="username" class="form-label">Nome de usuário</label>
+        <input id="username" type="text" class="form-control" formControlName="username" autocomplete="username" [class.is-invalid]="isInvalid('username')" />
+        <div class="invalid-feedback">Informe um nome de usuário.</div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="email" class="form-label">E-mail</label>
+        <input id="email" type="email" class="form-control" formControlName="email" autocomplete="email" [class.is-invalid]="isInvalid('email')" />
+        <div class="invalid-feedback">Informe um e-mail válido.</div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="document_cpf" class="form-label">CPF</label>
+        <input
+          id="document_cpf"
+          type="text"
+          inputmode="numeric"
+          maxlength="11"
+          class="form-control"
+          formControlName="document_cpf"
+          placeholder="Somente números"
+          [class.is-invalid]="isInvalid('document_cpf')"
+        />
+        <div class="invalid-feedback">O CPF deve ter 11 dígitos.</div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="birth_date" class="form-label">Data de nascimento</label>
+        <input id="birth_date" type="date" class="form-control" formControlName="birth_date" [class.is-invalid]="isInvalid('birth_date')" />
+        <div class="invalid-feedback">Informe sua data de nascimento.</div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="contact" class="form-label">Telefone</label>
+        <input id="contact" type="tel" class="form-control" formControlName="contact" autocomplete="tel" [class.is-invalid]="isInvalid('contact')" />
+        <div class="invalid-feedback">Informe um telefone para contato.</div>
+      </div>
+
+      <div class="col-12">
+        <label for="address" class="form-label">Endereço</label>
+        <input id="address" type="text" class="form-control" formControlName="address" autocomplete="street-address" [class.is-invalid]="isInvalid('address')" />
+        <div class="invalid-feedback">Informe seu endereço.</div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="password" class="form-label">Senha</label>
+        <input id="password" type="password" class="form-control" formControlName="password" autocomplete="new-password" [class.is-invalid]="isInvalid('password')" />
+        <div class="invalid-feedback">A senha deve ter pelo menos 8 caracteres.</div>
+      </div>
+
+      <div class="col-12">
+        <div class="form-check">
+          <input id="terms" type="checkbox" class="form-check-input" formControlName="terms" [class.is-invalid]="isInvalid('terms')" />
+          <label for="terms" class="form-check-label">Aceito os termos de uso</label>
+          <div class="invalid-feedback">É preciso aceitar os termos.</div>
+        </div>
+      </div>
+
+      @if (errorMessage) {
+        <div class="col-12">
+          <div class="alert alert-danger py-2 mb-0" role="alert">{{ errorMessage }}</div>
+        </div>
+      }
+
+      <div class="col-12 d-flex gap-2 align-items-center">
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          {{ loading ? 'Criando...' : 'Criar conta' }}
+        </button>
+        <span class="text-body-secondary">Já tem conta? <a routerLink="/login">Entrar</a></span>
+      </div>
+    </div>
+  </form>
+</div>

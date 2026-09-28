@@ -1,0 +1,67 @@
+<div class="container form-page">
+  <h1 class="h3 mb-4">{{ isEdit ? 'Editar ONG' : 'Cadastrar ONG' }}</h1>
+
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>
+    </div>
+  } @else if (loadError) {
+    <div class="alert alert-danger" role="alert">{{ loadError }}</div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="card card-body shadow-sm" novalidate>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="name" class="form-label">Nome da ONG</label>
+          <input id="name" type="text" class="form-control" formControlName="name" [class.is-invalid]="isInvalid('name')" />
+          <div class="invalid-feedback">Informe o nome da ONG.</div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="document" class="form-label">CNPJ</label>
+          <input id="document" type="text" class="form-control" formControlName="document" [class.is-invalid]="isInvalid('document')" />
+          <div class="invalid-feedback">Informe o CNPJ.</div>
+        </div>
+
+        <div class="col-12">
+          <label for="email" class="form-label">E-mail de contato</label>
+          <input id="email" type="email" class="form-control" formControlName="email" [class.is-invalid]="isInvalid('email')" />
+          <div class="invalid-feedback">Informe um e-mail válido.</div>
+        </div>
+
+        <div class="col-12">
+          <label for="address" class="form-label">Endereço</label>
+          <input id="address" type="text" class="form-control" formControlName="address" [class.is-invalid]="isInvalid('address')" />
+          <div class="invalid-feedback">Informe o endereço.</div>
+        </div>
+
+        <div class="col-md-8">
+          <label for="city" class="form-label">Cidade</label>
+          <input id="city" type="text" class="form-control" formControlName="city" [class.is-invalid]="isInvalid('city')" />
+          <div class="invalid-feedback">Informe a cidade.</div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="state" class="form-label">Estado</label>
+          <select id="state" class="form-select" formControlName="state" [class.is-invalid]="isInvalid('state')">
+            <option value="" disabled>UF</option>
+            @for (state of states; track state) {
+              <option [value]="state">{{ state }}</option>
+            }
+          </select>
+          <div class="invalid-feedback">Selecione o estado.</div>
+        </div>
+
+        @if (errorMessage) {
+          <div class="col-12">
+            <div class="alert alert-danger py-2 mb-0" role="alert">{{ errorMessage }}</div>
+          </div>
+        }
+
+        <div class="col-12 d-flex gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="saving">{{ saving ? 'Salvando...' : 'Salvar' }}</button>
+          <a routerLink="/minha-conta" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+      </div>
+    </form>
+  }
+</div>

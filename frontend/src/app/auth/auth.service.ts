@@ -1,63 +1,72 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
-interface IUser{
+const ACCESS_COOKIE = 'access';
+const REFRESH_COOKIE = 'refresh';
 
-    id_user: string
-    name: string
-    email: string
+interface TokenPair {
+  access: string
+  refresh: string
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  user?: IUser
-  isLoggedIn: boolean = false;
-  isLoggedInChange: Subject<boolean> = new Subject<boolean>();
-  constructor(private http: HttpClient, private cookieService: CookieService) {
-    this.isLoggedIn = this.canActivate()
-   }
-  canActivate(): boolean {
-    return this.cookieService.check('access');
+  private http = inject(HttpClient);
+  private cookies = inject(CookieService);
+  private loggedIn = new BehaviorSubject<boolean>(this.hasSession());
+
+  readonly isLoggedIn$ = this.loggedIn.asObservable();
+
+  isLoggedIn(): boolean {
+    return this.hasSession();
   }
 
-  login(email: string, password: string) {
-    return this.http.post<any>('http://localhost:8000/api/auth/obtain/', { email, password }).subscribe(response => {
-      this.user = response.user
-      this.cookieService.set('id_user', response.user.id_user);
-      this.cookieService.set('access', response.access);
-      this.isLoggedIn = true
-      this.isLoggedInChange.next(this.isLoggedIn);
-    });
+  login(email: string, password: string): Observable<void> {
+    return this.http.post<TokenPair>(`${environment.apiUrl}/auth/obtain/`, { email, password }).pipe(
+      tap(({ access, refresh }) => {
+        this.storeToken(ACCESS_COOKIE, access);
+        this.storeToken(REFRESH_COOKIE, refresh);
+        this.loggedIn.next(true);
+      }),
+      map(() => undefined)
+    );
   }
 
-  logout() {
-    // Limpar o cookie quando o usuário fizer logout
-    this.cookieService.delete('access');
-    this.cookieService.delete('id_user');
-    this.isLoggedIn = false
-    this.isLoggedInChange.next(this.isLoggedIn);
+  refresh(): Observable<string> {
+    const refresh = this.cookies.get(REFRESH_COOKIE);
+    return this.http.post<{ access: string }>(`${environment.apiUrl}/auth/refresh/`, { refresh }).pipe(
+      tap(({ access }) => this.storeToken(ACCESS_COOKIE, access)),
+      map(({ access }) => access)
+    );
   }
 
-  getToken() {
-    // Obter o token do cookie
-    return this.cookieService.get('access');
+  logout(): void {
+    this.cookies.delete(ACCESS_COOKIE, '/');
+    this.cookies.delete(REFRESH_COOKIE, '/');
+    this.loggedIn.next(false);
   }
 
-  getUserId() {
-    // Obter o token do cookie
-    return this.cookieService.get('id_user');
+  getToken(): string {
+    return this.cookies.get(ACCESS_COOKIE);
   }
 
-  getMe() {
-    if (!this.getUserId())return
-
-    return this.http.get<any>('http://localhost:8000/api/usuarios/'+this.getUserId()).subscribe(response => {
-      this.user = response
-    });
+  private hasSession(): boolean {
+    return this.cookies.check(REFRESH_COOKIE);
   }
 
+  private storeToken(name: string, token: string): void {
+    this.cookies.set(name, token, { expires: tokenExpiration(token), path: '/', sameSite: 'Lax' });
+  }
+}
+
+export function tokenExpiration(token: string): Date | undefined {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    return new Date(payload.exp * 1000);
+  } catch {
+    return undefined;
+  }
 }

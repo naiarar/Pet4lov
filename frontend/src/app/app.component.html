@@ -1,68 +1,54 @@
-<header role="banner">
+<header>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <div class="container">
-      <a class="navbar-brand" href="/">Pet4Lov</a>
+      <a class="navbar-brand fw-bold" routerLink="/">🐾 Pet4lov</a>
       <button
         class="navbar-toggler"
         type="button"
-        data-toggle="collapse"
-        data-target="#navbarsExample05"
-        aria-controls="navbarsExample05"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
+        aria-controls="main-nav"
+        [attr.aria-expanded]="menuOpen"
+        aria-label="Abrir menu"
+        (click)="menuOpen = !menuOpen"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarsExample05">
-        <ul class="navbar-nav ml-auto pl-lg-5 pl-0">
+      <div class="collapse navbar-collapse" id="main-nav" [class.show]="menuOpen">
+        <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link active" routerLink="pets" href="pets">Pets</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="ongs">Ongs</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="dropdown04"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-              >A Pet4lov</a
-            >
-            <div class="dropdown-menu" aria-labelledby="dropdown04">
-              <a class="dropdown-item" href="#">Missão</a>
-              <a class="dropdown-item" href="#">Visão</a>
-              <a class="dropdown-item" href="#">Valores</a>
-            </div>
-          </li>
-          @if (isLogged) {
-          <li class="nav-item">
-            <a class="nav-link" href="#" (click)="logout()">Logout</a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" href="users/:id">Minha Conta</a>
-          </li>
-          } @else {
-          <li class="nav-item">
-            <a class="nav-link" href="register">Cadastre-se</a>
+            <a class="nav-link" routerLink="/pets" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Pets</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="login">Login</a>
+            <a class="nav-link" routerLink="/ongs" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">ONGs</a>
           </li>
-          }
         </ul>
 
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item cta-btn">
-            <a class="nav-link" href="#">Contato</a>
-          </li>
+        <ul class="navbar-nav">
+          @if (isLoggedIn$ | async) {
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/minha-conta" routerLinkActive="active">Minha conta</a>
+            </li>
+            <li class="nav-item">
+              <button type="button" class="btn btn-link nav-link" (click)="logout()">Sair</button>
+            </li>
+          } @else {
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/login" routerLinkActive="active">Entrar</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-primary ms-md-2" routerLink="/cadastro">Criar conta</a>
+            </li>
+          }
         </ul>
       </div>
     </div>
   </nav>
 </header>
-<router-outlet></router-outlet>
+
+<main class="py-4">
+  <router-outlet />
+</main>
+
+<footer class="border-top py-3 text-center text-body-secondary small">
+  Pet4lov © {{ year }} · Conectando ONGs e adotantes
+</footer>

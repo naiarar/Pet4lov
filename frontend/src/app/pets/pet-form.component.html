@@ -1,0 +1,113 @@
+<div class="container form-page">
+  <h1 class="h3 mb-4">{{ isEdit ? 'Editar pet' : 'Cadastrar pet' }}</h1>
+
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div>
+    </div>
+  } @else if (loadError) {
+    <div class="alert alert-danger" role="alert">{{ loadError }}</div>
+  } @else if (!ong) {
+    <div class="alert alert-warning">
+      Para cadastrar pets você precisa ter uma ONG. <a routerLink="/ongs/nova" class="alert-link">Cadastre sua ONG</a> primeiro.
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="card card-body shadow-sm" novalidate>
+      <p class="text-body-secondary">ONG: <strong>{{ ong.name }}</strong></p>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="name_animal" class="form-label">Nome</label>
+          <input id="name_animal" type="text" class="form-control" formControlName="name_animal" [class.is-invalid]="isInvalid('name_animal')" />
+          <div class="invalid-feedback">Informe o nome do pet.</div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="type" class="form-label">Espécie</label>
+          <select id="type" class="form-select" formControlName="type" [class.is-invalid]="isInvalid('type')">
+            <option value="" disabled>Selecione</option>
+            @for (type of types; track type) {
+              <option [value]="type">{{ type }}</option>
+            }
+          </select>
+          <div class="invalid-feedback">Selecione a espécie.</div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="breed" class="form-label">Raça</label>
+          <input id="breed" type="text" class="form-control" formControlName="breed" placeholder="Ex.: SRD" [class.is-invalid]="isInvalid('breed')" />
+          <div class="invalid-feedback">Informe a raça.</div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="color" class="form-label">Cor</label>
+          <input id="color" type="text" class="form-control" formControlName="color" maxlength="20" [class.is-invalid]="isInvalid('color')" />
+          <div class="invalid-feedback">Informe a cor.</div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="birth_date" class="form-label">Nascimento (aprox.)</label>
+          <input id="birth_date" type="date" class="form-control" formControlName="birth_date" [class.is-invalid]="isInvalid('birth_date')" />
+          <div class="invalid-feedback">Informe a data.</div>
+        </div>
+
+        <div class="col-12">
+          <label for="health_condition" class="form-label">Condição de saúde</label>
+          <input id="health_condition" type="text" class="form-control" formControlName="health_condition" [class.is-invalid]="isInvalid('health_condition')" />
+          <div class="invalid-feedback">Descreva a condição de saúde.</div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="vaccination_status" class="form-label">Vacinação</label>
+          <input id="vaccination_status" type="text" class="form-control" formControlName="vaccination_status" placeholder="Ex.: V10 em dia" />
+        </div>
+
+        <div class="col-md-6">
+          <label for="deworming_status" class="form-label">Vermifugação</label>
+          <input id="deworming_status" type="text" class="form-control" formControlName="deworming_status" placeholder="Ex.: Feita em 03/2024" />
+        </div>
+
+        <div class="col-md-8">
+          <label for="city" class="form-label">Cidade</label>
+          <input id="city" type="text" class="form-control" formControlName="city" maxlength="30" [class.is-invalid]="isInvalid('city')" />
+          <div class="invalid-feedback">Informe a cidade.</div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="state" class="form-label">Estado</label>
+          <select id="state" class="form-select" formControlName="state" [class.is-invalid]="isInvalid('state')">
+            <option value="" disabled>UF</option>
+            @for (state of states; track state) {
+              <option [value]="state">{{ state }}</option>
+            }
+          </select>
+          <div class="invalid-feedback">Selecione o estado.</div>
+        </div>
+
+        <div class="col-12">
+          <label for="observations" class="form-label">Observações</label>
+          <textarea id="observations" class="form-control" rows="3" formControlName="observations" maxlength="250"></textarea>
+        </div>
+
+        <div class="col-12">
+          <label for="image" class="form-label">Foto</label>
+          @if (currentImage && !image) {
+            <img [src]="currentImage" alt="Foto atual" class="d-block rounded mb-2" width="120" />
+          }
+          <input id="image" type="file" class="form-control" accept="image/*" (change)="onImageChange($event)" />
+        </div>
+
+        @if (errorMessage) {
+          <div class="col-12">
+            <div class="alert alert-danger py-2 mb-0" role="alert">{{ errorMessage }}</div>
+          </div>
+        }
+
+        <div class="col-12 d-flex gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="saving">{{ saving ? 'Salvando...' : 'Salvar' }}</button>
+          <a routerLink="/minha-conta" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+      </div>
+    </form>
+  }
+</div>

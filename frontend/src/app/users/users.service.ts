@@ -1,44 +1,18 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { environment } from '../environment/environment';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { NewUser, User } from './user.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class UsersService {
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
-
-
-
-   user(id:string) {
-    return this.http.get(
-      environment.apiUrl+'/api/usuarios/'+id+'/',
-    );
+  register(user: NewUser): Observable<User> {
+    return this.http.post<User>(`${environment.apiUrl}/register/`, user);
   }
 
-   criarUser(user: any) {
-    return this.http.post(
-      environment.apiUrl+'/api/usuarios/',
-      user
-    );
+  me(): Observable<User> {
+    return this.http.get<User>(`${environment.apiUrl}/usuarios/me/`);
   }
-
-
-   atualizarUser(id: string, user: any) {
-    return this.http.patch(
-      environment.apiUrl+'/api/usuarios/'+id+'/',
-      user
-    );
-  }
-
-   excluirUser(id: string) {
-    return this.http.delete(
-      environment.apiUrl+'/api/usuarios/'+id+'/'
-    );
-  }
-
-
-
-
 }

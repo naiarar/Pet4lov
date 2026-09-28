@@ -1,18 +1,19 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from adocao.views import UsuarioListCreate
-from adocao_pets.views import hello_world
+from adocao.views import UsuarioCreate
+
 urlpatterns = [
     path('api/auth/obtain/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),
-    path('api/register/', UsuarioListCreate.as_view(), name="Criar-Usuario"),
+    path('api/register/', UsuarioCreate.as_view(), name="Criar-Usuario"),
     path('api/', include('adocao.urls')),
-    path('hello', hello_world)
 ]
 
-
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

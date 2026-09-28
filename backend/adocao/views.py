@@ -1,122 +1,53 @@
-from rest_framework import viewsets, generics, status
-from .models import Usuario, ONG, Pet
-from .serializers import UsuarioSerializer, ONGSerializer, PetSerializer
+from rest_framework import generics, permissions, viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from rest_framework import authentication, permissions
+
+from .models import ONG, Pet, Usuario
+from .permissions import IsOwnerOrReadOnly, IsSelf
+from .serializers import ONGSerializer, PetSerializer, UsuarioSerializer
 
 
 class UsuarioViewSet(viewsets.ModelViewSet):
+    serializer_class = UsuarioSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSelf]
+    http_method_names = ["get", "put", "patch", "delete", "head", "options"]
+
+    def get_queryset(self):
+        return Usuario.objects.filter(pk=self.request.user.pk)
+
+    @action(detail=False, methods=["get"])
+    def me(self, request):
+        return Response(self.get_serializer(request.user).data)
+
+
+class UsuarioCreate(generics.CreateAPIView):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
+    permission_classes = [permissions.AllowAny]
 
-class UsuarioListCreate(generics.ListCreateAPIView):
-    queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer
-
-class UsuarioRetrieveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = []
-
-    def patch(self, request, *args, **kwargs):
-        Usuario_serializer_update = UsuarioSerializer(
-            instance=request.Usuario,
-            data=request.data,
-            partial=True
-        )
-        if Usuario_serializer_update.is_valid():
-            Usuario_serializer_update.save()
 
 class ONGViewSet(viewsets.ModelViewSet):
     queryset = ONG.objects.all()
     serializer_class = ONGSerializer
-    
-    def get_permissions(self):
-        if self.action == 'partial_update' or self.action == 'create':
-            return [permissions.IsAuthenticated()]
-        else:
-            return []
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    filterset_fields = ["responsible", "city", "state"]
+    search_fields = ["name", "city"]
+    owner_field = "responsible"
 
-    def get_queryset(self):
-        queryset = ONG.objects.all()
-        resposable = self.request.query_params.get('resposable')
+    def perform_create(self, serializer):
+        if ONG.objects.filter(responsible=self.request.user).exists():
+            raise ValidationError({"detail": "Já existe uma ONG cadastrada para este responsável."})
+        serializer.save(responsible=self.request.user)
 
-        if resposable:
-            queryset = queryset.filter(resposable=resposable)
 
-        return queryset
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        queryset = ONG.objects.all().filter(resposable=self.request.user)
-        
-        if (self.request.user != serializer.validated_data["resposable"]):
-            return Response(status=401, data={'details': 'Not the responsable'})
-        
-        
-        if queryset.count()> 0:
-            return Response(status=400, data={'details': 'Ja existe uma ong pra esse responsavel'}) 
-        
-        
-        self.perform_create(serializer)
-        return Response(serializer.data)
-    
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        
-        if (instance.resposable != self.request.user):
-            return Response(status=401, data={'details': 'Not the responsable'})
-        
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        
-        return Response(ONGSerializer(instance).data)
-    
-    
 class PetViewSet(viewsets.ModelViewSet):
-    queryset = Pet.objects.all()
+    queryset = Pet.objects.select_related("ong")
     serializer_class = PetSerializer
-   
-    def get_permissions(self):
-        print(self.action)
-        if self.action == 'partial_update' or self.action == 'create':
-            return [permissions.IsAuthenticated()]
-        else:
-            return []
-   
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    filterset_fields = ["ong", "type", "city", "state", "responsible"]
+    search_fields = ["name_animal", "breed", "city"]
+    owner_field = "responsible"
 
-        if (self.request.user != serializer.validated_data["responsable_pet"]):
-            return Response(status=401, data={'details': 'Not the responsable'})
-               
-        self.perform_create(serializer)
-        return Response(serializer.data)
-    
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        
-        if (instance.responsable_pet != self.request.user):
-            return Response(status=401, data={'details': 'Not the responsable'})
-        
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        
-        return Response(PetSerializer(instance).data)
-    
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-
-        if (instance.responsable_pet != self.request.user):
-            return Response(status=401, data={'details': 'Not the responsable'})
-        
-        self.perform_destroy(instance)
-        
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def perform_create(self, serializer):
+        serializer.save(responsible=self.request.user)

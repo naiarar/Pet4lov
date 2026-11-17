@@ -13,6 +13,8 @@ Plataforma de adoção de animais que conecta **ONGs de proteção animal** a pe
 - Regras de permissão no backend: qualquer pessoa pode ver; só o responsável altera ou remove sua ONG e seus pets
 - Interface responsiva com estados de carregamento, vazio e erro
 
+As regras de negócio em detalhe (campos, validações, permissões e o que está planejado) estão em [docs/regras-de-negocio.md](docs/regras-de-negocio.md).
+
 ## Stack
 
 | Camada | Tecnologia |
@@ -36,7 +38,7 @@ Pet4lov/
 │   ├── users/           cadastro, "minha conta" e serviço de usuários
 │   ├── login/           tela de login
 │   └── shared/          utilitários (mensagens de erro da API, UFs)
-├── docs/                imagens do README
+├── docs/                regras de negócio e imagens do README
 └── docker-compose.yaml  PostgreSQL local
 ```
 

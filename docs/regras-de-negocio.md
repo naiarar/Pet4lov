@@ -6,7 +6,7 @@ Atualizado em 17/11/2026.
 
 O Pet4lov é uma vitrine de pets para adoção: ONGs publicam os animais e os interessados entram em contato com a ONG por e-mail. A adoção em si acontece fora do sistema; hoje não existe solicitação, aprovação nem baixa de pet adotado.
 
-Este documento descreve as regras **como estão implementadas hoje** (backend Django/DRF em `backend/adocao/` e frontend Angular em `frontend/src/app/`). Onde o front e a API divergem, as duas regras aparecem. Mudanças já planejadas estão na última seção, com a chave do card no Jira.
+Este documento descreve as regras **como estão implementadas hoje** (backend Django/DRF em `backend/adocao/` e frontend React em `frontend/src/`). Onde o front e a API divergem, as duas regras aparecem. Mudanças já planejadas estão na última seção, com a chave do card no Jira.
 
 | Perfil | Quem é | O que faz |
 | --- | --- | --- |
@@ -75,10 +75,10 @@ O login usa e-mail e senha e devolve um par de tokens JWT. O token de acesso dur
 Comportamento do front:
 
 - Os tokens ficam nos cookies `access` e `refresh` (caminho `/`, `SameSite=Lax`, expirando junto com o token). Eles são gravados pelo JavaScript, então não são `HttpOnly`.
-- A pessoa é considerada logada enquanto o cookie `refresh` existir.
+- A pessoa é considerada logada enquanto o cookie `refresh` existir. Quando ele expira, o menu volta para "Entrar" e "Criar conta" na próxima navegação ou na próxima resposta 401.
 - Toda chamada à API, menos as de `/auth/`, leva o token de acesso.
-- Se a API responder 401 e houver sessão, o front renova o token uma vez e repete a chamada. Se a renovação falhar, faz logout e manda para `/login` guardando a página de volta (`returnUrl`).
-- Rotas que exigem login: `/minha-conta`, `/ongs/nova`, `/ongs/{id}/editar`, `/pets/novo` e `/pets/{id}/editar`. Sem sessão, a pessoa vai para `/login` e volta para a rota pedida depois de entrar.
+- Se a API responder 401 e houver sessão, o front renova o token uma vez e repete a chamada. Várias chamadas que recebem 401 ao mesmo tempo esperam uma única renovação. Se a renovação falhar, faz logout e manda para `/login` guardando a página de volta (`returnUrl`).
+- Rotas que exigem login: `/minha-conta`, `/ongs/nova`, `/ongs/{id}/editar`, `/pets/novo` e `/pets/{id}/editar`. Sem sessão, a pessoa vai para `/login` e volta para a rota pedida depois de entrar. O `returnUrl` só aceita caminhos do próprio site; qualquer outro valor leva para `/minha-conta`.
 - "Sair" só apaga os cookies. Os tokens já emitidos continuam válidos na API até expirarem.
 
 ## ONGs
@@ -186,7 +186,7 @@ Mensagens de erro: a API devolve os erros por campo, e o front junta tudo numa f
 
 ## Lacunas conhecidas e regras planejadas
 
-O backlog do projeto PET no Jira tem 11 bugs que contrariam regras acima e uma série de regras novas. Quando um card for entregue, a seção correspondente deste documento deve ser atualizada.
+O backlog do projeto PET no Jira tem 8 bugs abertos que contrariam regras acima e uma série de regras novas. Quando um card for entregue, a seção correspondente deste documento deve ser atualizada.
 
 ### Bugs que afetam regras de negócio
 
@@ -196,13 +196,10 @@ O backlog do projeto PET no Jira tem 11 bugs que contrariam regras acima e uma s
 | PET-68 | Troca de senha | A senha muda sem informar a atual |
 | PET-69 | Foto do pet | As fotos não carregam com `DEBUG=False` |
 | PET-70 | Foto do pet | O arquivo antigo fica no disco ao trocar a foto ou excluir o pet |
-| PET-71 | Sessão | O menu continua como "logado" depois que a sessão expira |
 | PET-72 | Cadastro de pet | Falha quando a cidade da ONG tem mais de 30 caracteres |
-| PET-73 | Contato com a ONG | O assunto do e-mail quebra com caracteres especiais no nome do pet |
 | PET-74 | Datas de nascimento | Datas futuras são aceitas |
 | PET-75 | Regras de senha | A regra de senha parecida com os dados não roda no cadastro |
 | PET-76 | Cadastro de usuário | Front e API exigem campos diferentes |
-| PET-77 | Sessão | Várias respostas 401 disparam várias renovações de token ao mesmo tempo |
 
 ### Regras que vão mudar
 

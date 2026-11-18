@@ -19,10 +19,10 @@ As regras de negócio em detalhe (campos, validações, permissões e o que est�
 
 | Camada | Tecnologia |
 |---|---|
-| Front-end | Angular 17 (standalone components, control flow, lazy loading), Bootstrap 5 (SCSS) |
+| Front-end | React 19 + TypeScript (Vite), React Router, TanStack Query, React Hook Form, Axios, Bootstrap 5 (SCSS) |
 | Back-end | Django 5, Django REST Framework, SimpleJWT, django-filter |
 | Banco | PostgreSQL 14 (via Docker) |
-| Qualidade | Testes com Django `APITestCase` e Jasmine/Karma, CI no GitHub Actions |
+| Qualidade | Testes com Django `APITestCase` e Vitest + Testing Library, CI no GitHub Actions |
 
 ## Arquitetura
 
@@ -31,13 +31,13 @@ Pet4lov/
 ├── backend/
 │   ├── adocao/          models, serializers, views, permissões e testes da API
 │   └── adocao_pets/     settings e rotas principais
-├── frontend/src/app/
-│   ├── auth/            AuthService, interceptor (token + refresh) e guard
-│   ├── pets/            listagem, detalhe, formulário e serviço de pets
-│   ├── ongs/            listagem, formulário e serviço de ONGs
-│   ├── users/           cadastro, "minha conta" e serviço de usuários
-│   ├── login/           tela de login
-│   └── shared/          utilitários (mensagens de erro da API, UFs)
+├── frontend/src/
+│   ├── api/             cliente Axios (token + refresh), chamadas de pets, ONGs e usuários
+│   ├── auth/            sessão em cookies, rota protegida e caminhos de login
+│   ├── components/      layout com o menu, card de pet e spinner
+│   ├── pages/           telas (pets, ONGs, login, cadastro e "minha conta")
+│   ├── shared/          tipos e utilitários (mensagens de erro da API, UFs, datas)
+│   └── routes.tsx       rotas com carregamento sob demanda
 ├── docs/                regras de negócio e imagens do README
 └── docker-compose.yaml  PostgreSQL local
 ```
@@ -98,7 +98,7 @@ Cada usuário pode ter no máximo uma ONG, e só pode cadastrar pets na própria
 
 ## Como rodar
 
-**Pré-requisitos:** Python 3.10+, Node 18+ e Docker.
+**Pré-requisitos:** Python 3.10+, Node 22.22+ e Docker.
 
 ```bash
 docker compose up -d
@@ -118,10 +118,10 @@ Em outro terminal:
 ```bash
 cd frontend
 npm install
-npm start
+npm run dev
 ```
 
-A API sobe em `http://localhost:8000`, o admin em `http://localhost:8000/admin` e o front em `http://localhost:4200`.
+A API sobe em `http://localhost:8000`, o admin em `http://localhost:8000/admin` e o front em `http://localhost:4200`. Para apontar o front para outra API, defina `VITE_API_URL` (por exemplo, num arquivo `frontend/.env.local`).
 
 ## Testes
 
@@ -130,7 +130,7 @@ cd backend && python manage.py test
 cd frontend && npm run test:ci
 ```
 
-Os testes do backend cobrem cadastro, login, isolamento entre usuários e as regras de permissão de ONGs e pets. Os do frontend cobrem o fluxo de autenticação (serviço, interceptor com refresh e guard), a tela de login e a listagem de pets. Tudo roda no CI a cada push.
+Os testes do backend cobrem cadastro, login, isolamento entre usuários e as regras de permissão de ONGs e pets. Os do frontend cobrem a sessão, o cliente da API (token, refresh único para várias chamadas simultâneas e sessão expirada), a rota protegida, a tela de login, a listagem de pets e o link de contato com a ONG. Tudo roda no CI a cada push.
 
 ## Autora
 
